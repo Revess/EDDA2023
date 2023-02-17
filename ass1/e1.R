@@ -45,3 +45,7 @@ psign[i]=binom.test(sum(x>0),n,p=0.5)[[3]] } ## extract p-value
 sum(psign<0.05)/B # fraction of rejecting H0, the power of the sign test
 sum(pttest<0.05)/B # fraction of rejecting H0, the power of the t-test
 
+#~~~~D~~~~#
+
+
+#~~~~E~~~~#
