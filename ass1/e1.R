@@ -1,5 +1,5 @@
 #~~~~A~~~~#
-birthweights = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt")
+birthweights = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
 #The First sentence
 qqnorm(birthweights$birthweight)
 
@@ -45,3 +45,51 @@ psign[i]=binom.test(sum(x>0),n,p=0.5)[[3]] } ## extract p-value
 sum(psign<0.05)/B # fraction of rejecting H0, the power of the sign test
 sum(pttest<0.05)/B # fraction of rejecting H0, the power of the t-test
 
+############################
+# This was some testing, ignore:
+#binom.test(sum(birthweights$birthweight<2600), n=nrow(birthweights), p=0.025)
+#sum(birthweights$birthweight<2600)
+#r = 0.25 + (1.96 * sqrt((0.25*0.75)/sum(birthweights$birthweight<2600)))
+#l = 0.25 - (1.96 * sqrt((0.25*0.75)/sum(birthweights$birthweight<2600)))
+#sqrt((r-l)/2)
+#(r-l)/2/2
+
+
+#lower = subset(birthweights, birthweight < 2600)
+#prob = length(lower$birthweight) / length(birthweights$birthweight)
+#prob
+#mean(lower$birthweight)
+
+
+#new_mean = mean(birthweights$birthweight) * (2*prob)
+#new_mean
+#binom.test(lower, n=nrow(lower$birthweight), p=0.25)
+
+
+#binom.test(ll, lb, p=0.5)
+#binom.test(length(subset(birthweights, birthweight < 2600)$birth), length(birthweights$birthweight), alternative="less", conf.level=0.25)
+
+############################
+#~~~~D~~~~#
+# Calculate the PR based on PR
+sample_mean_amount = mean(subset(birthweights, birthweight < 2600)$birthweight)
+sample_mean_amount
+sample_mean_prob = length(lower$birthweight) / length(birthweights$birthweight)
+sample_mean_prob
+pl = 0.25
+pr = sample_mean_prob + (sample_mean_prob - pl)
+pl
+pr
+
+
+mean_all = mean(birthweights$birthweight)
+mean_all
+cl_left = mean_all * (2 * pl)
+cl_right = mean_all * (2 * pr)
+cl_left
+cl_right
+
+result = (cl_left + cl_right) / 2
+result
+
+###############################
