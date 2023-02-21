@@ -1,5 +1,7 @@
 #~~~~A~~~~#
 df = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt")
+df = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
+
 #The First sentence
 qqnorm(df$birthweight)
 
@@ -45,14 +47,53 @@ psign[i]=binom.test(sum(x>0),n,p=0.5)[[3]] } ## extract p-value
 sum(psign<0.05)/B # fraction of rejecting H0, the power of the sign test
 sum(pttest<0.05)/B # fraction of rejecting H0, the power of the t-test
 
-#~~~~D~~~~#
-# t.test(df$birthweight, mu=2600, alternative = "less")
-# binom.test(sum(df$birthweight<2600), n=nrow(df), alternative = "less")
-zl = qnorm(0.25)
-zl
+############################
+# This was some testing, ignore:
+#binom.test(sum(df$birthweight<2600), n=nrow(df), p=0.025)
+#sum(df$birthweight<2600)
+#r = 0.25 + (1.96 * sqrt((0.25*0.75)/sum(df$birthweight<2600)))
+#l = 0.25 - (1.96 * sqrt((0.25*0.75)/sum(df$birthweight<2600)))
+#sqrt((r-l)/2)
+#(r-l)/2/2
 
-binom.test(sum(df$birthweight<2600), n=nrow(df), alternative = "less")
-binom.test(sum(df$birthweight<2600), n=nrow(df))
+
+#lower = subset(df, birthweight < 2600)
+#prob = length(lower$birthweight) / length(df$birthweight)
+#prob
+#mean(lower$birthweight)
+
+
+#new_mean = mean(df$birthweight) * (2*prob)
+#new_mean
+#binom.test(lower, n=nrow(lower$birthweight), p=0.25)
+
+
+#binom.test(ll, lb, p=0.5)
+#binom.test(length(subset(df, birthweight < 2600)$birth), length(df$birthweight), alternative="less", conf.level=0.25)
+
+############################
+#~~~~D~~~~#
+# Calculate the PR based on PR
+lower = subset(df, birthweight < 2600)$birthweight
+sample_mean_amount = mean(lower)
+sample_mean_amount
+sample_mean_prob = length(lower) / length(df$birthweight)
+sample_mean_prob
+pl = 0.25
+pr = sample_mean_prob + (sample_mean_prob - pl)
+pl
+pr
+
+mean_all = mean(df$birthweight)
+mean_all
+cl_left = mean_all * (2 * pl)
+cl_right = mean_all * (2 * pr)
+cl_left
+cl_right
+
+result = (cl_left + cl_right) / 2
+result
+###############################
 
 #~~~~E~~~~#
 # sd(df$birthweight)
@@ -97,3 +138,4 @@ hist(femalemeans)
 
 mean(malemeans)
 mean(femalemeans)
+
