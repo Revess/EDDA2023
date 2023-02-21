@@ -1,6 +1,7 @@
 #~~~~A~~~~#
-df = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
 df = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt")
+df = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
+
 #The First sentence
 qqnorm(df$birthweight)
 
@@ -93,3 +94,48 @@ cl_right
 result = (cl_left + cl_right) / 2
 result
 ###############################
+
+#~~~~E~~~~#
+# sd(df$birthweight)
+# mean(df$birthweight)
+
+# pvals = c()
+
+# for(i in 1:5000){
+#     m2600 = sample(df[df < 2600], 34)
+#     f2600 = sample(df[df < 2600 & df != m2600], 28)
+
+#     males = sample(df[df >= 2600], 61)
+#     females = sample(df[df >= 2600 & df != males], 65)
+
+#     males = c(m2600,males)
+#     females = c(f2600,females)
+#     pvals = c(pvals, t.test(males,females)$p.value)
+# }
+
+# mean(pvals)
+# hist(pvals)
+
+malemeans = c()
+femalemeans = c()
+for(i in 1:5000){
+    m2600 = sample(df[df < 2600], 34)
+    f2600 = sample(df[df < 2600 & df != m2600], 28)
+
+    males = sample(df[df >= 2600], 61)
+    females = sample(df[df >= 2600 & df != males], 65)
+
+    males = c(m2600,males)
+    females = c(f2600,females)
+    malemeans= c(malemeans,mean(males))
+    femalemeans= c(femalemeans,mean(females))
+}
+
+t.test(malemeans,femalemeans)
+
+hist(malemeans)
+hist(femalemeans)
+
+mean(malemeans)
+mean(femalemeans)
+
