@@ -46,6 +46,15 @@ sum(psign<0.05)/B # fraction of rejecting H0, the power of the sign test
 sum(pttest<0.05)/B # fraction of rejecting H0, the power of the t-test
 
 #~~~~D~~~~#
+# t.test(birthweights$birthweight, mu=2600, alternative = "less")
+# binom.test(sum(birthweights$birthweight<2600), n=nrow(birthweights), alternative = "less")
+zl = qnorm(0.25)
+zl
+
+binom.test(sum(birthweights$birthweight<2600), n=nrow(birthweights), alternative = "less")
+binom.test(sum(birthweights$birthweight<2600), n=nrow(birthweights))
+
+
 
 
 #~~~~E~~~~#

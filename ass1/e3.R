@@ -77,13 +77,20 @@ mean of x mean of y
  72.52564  68.68077'''
 
 #~~~B~~~#
-diet = c(df$weightdiff)
-groups = factor(c( 
-    rep(c("group1"), length(df[df$diet == 1,]$weightdiff)), 
-    rep(c("group2"), length(df[df$diet == 2,]$weightdiff)), 
-    rep(c("group3"), length(df[df$diet == 3,]$weightdiff))
-    ))
-aov(diet ~ groups)
-kruskal.test(diet ~ groups)
+aov(weightdiff ~ diet, data=df)
+kruskal.test(weightdiff ~ diet, data=df)
 
 #~~~C~~~#
+aov(weightdiff ~ gender + age, data=df)
+
+#~~~D~~~#
+kruskal.test(df[df$diet == 1,]$weightdiff ~ df[df$diet==1,]$height)
+kruskal.test(df[df$diet == 2,]$weightdiff ~ df[df$diet==2,]$height)
+kruskal.test(df[df$diet == 3,]$weightdiff ~ df[df$diet==3,]$height)
+# BC it gives a p-value
+
+#~~~E~~~#
+# BC it gives a p-value
+kruskal.test(df[df$diet == 1,]$preweight ~ df[df$diet==1,]$weight6weeks)
+kruskal.test(df[df$diet == 2,]$preweight ~ df[df$diet==2,]$weight6weeks)
+kruskal.test(df[df$diet == 3,]$preweight ~ df[df$diet==3,]$weight6weeks)
