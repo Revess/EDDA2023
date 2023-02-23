@@ -94,64 +94,79 @@ plot(before~after) # This Pearson's/Spearman's Rank correlation test shows that 
 
 
 #~~~~C~~~~#
-# Apply the Cental Limit Theory.
-# We take samples of size = 4 with B = 1000.
-A = 1000
-A = 100 # Single trial
-means = numeric(A)
-for (a in 1:A)
-{
-  B = 1000
-  sample_size = 3
-  
-  values = numeric(B)
-  for (i in 1:B)
-  {
-    values[i] = mean(sample(after, sample_size))
-  }
-  #hist(values)
-  
-  sample_mean = mean(values)
-  means[a] = sample_mean
-}
+# Apply the Cental Limit Theory (CLT).
+#CLT is STD / sqrt(n)
+theta_right = mean(after) + (mean(after) - 3) # Theta Hat
+#CLT = SIGMA/SQRT(n)
+clt = sd(after) / sqrt(length(after))
+CI_left = theta_right - 2*clt
+CI_right = theta_right + 2*clt
 
-hist(means)
-mean(means)
-mean(after)
+CI_left
+CI_right
 
-head(after)
-min(after)
-max(after)
-
-
-#standard_devation = sd(values)
-#left_bound = sample_mean - 2*standard_devation
-#right_bound = sample_mean + 2*standard_devation
-#sample_mean
-#standard_devation
-#left_bound
-#right_bound
-
-
-
-
-
-B = 1000
-sample_size = 3
-
-rb = numeric(B)
-means = numeric(B)
-for (i in 1:B)
-{
-  mn = mean(sample(after, sample_size))
-  rb[i] = mn + (mn - 3)
-  means[i] = mn
-}
-
-hist(rb)
-hist(means)
-
-mean(means)
-mean(rb)
-
-mean(means) + (mean(means) - 3)
+## Old:
+# # We take samples of size = 4 with B = 1000.
+# A = 1000
+# A = 100 # Single trial
+# means = numeric(A)
+# for (a in 1:A)
+# {
+#   B = 1000
+#   sample_size = 3
+#   
+#   values = numeric(B)
+#   for (i in 1:B)
+#   {
+#     values[i] = mean(sample(after, sample_size))
+#   }
+#   #hist(values)
+#   
+#   sample_mean = mean(values)
+#   means[a] = sample_mean
+# }
+# 
+# hist(means)
+# mean(means)
+# mean(after)
+# 
+# head(after)
+# min(after)
+# max(after)
+# 
+# 
+# #standard_devation = sd(values)
+# #left_bound = sample_mean - 2*standard_devation
+# #right_bound = sample_mean + 2*standard_devation
+# #sample_mean
+# #standard_devation
+# #left_bound
+# #right_bound
+# 
+# 
+# 
+# 
+# 
+# B = 1000
+# sample_size = 3
+# 
+# rb = numeric(B)
+# means = numeric(B)
+# for (i in 1:B)
+# {
+#   mn = mean(sample(after, sample_size))
+#   rb[i] = mn + (mn - 3)
+#   means[i] = mn
+# }
+# 
+# hist(rb)
+# hist(means)
+# 
+# mean(means)
+# mean(rb)
+# 
+# mean(means) + (mean(means) - 3)
+# 
+#~~~~D~~~~#
+t_statistic = max(after)
+t_statistic
