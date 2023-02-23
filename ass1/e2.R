@@ -63,36 +63,6 @@ ks.test(before, after, alternative = "greater") # We expect that before is bigge
 
 plot(before~after) # This Pearson's/Spearman's Rank correlation test shows that there might be a correlation?
 
-# An attempt at doing the permutation test, but the resulting P ends up at 0, which is because B = 1000.
-# Or something, I don't actually know. Might have to be checked.
-# As for the question, it is probably not applicable as the values are no independent (but instead correlate as they are the same person.)
-
-# mystat=function(x,y) {mean(x-y)}
-# B=1000
-# tstar=numeric(B)
-# for (i in 1:B) {
-#   ashinastar = t(apply(cbind(before,after),1,sample))
-#   val = mystat(ashinastar[,1],ashinastar[,2])
-#   val
-#   tstar[i] = val
-# }
-# tstar
-# 
-# myt=mystat(before, after)
-# myt
-# hist(tstar)
-# lines(rep(myt,2),c(0,20),col="red",lwd=2)
-# sum(tstar)
-# plt = sum(tstar<myt)
-# plt
-# pl=plt /B
-# pr=sum(tstar>myt)/B
-# p=2*min(pl,pr)
-# p
-# sum(tstar<myt)
-
-
-
 #~~~~C~~~~#
 # Apply the Cental Limit Theory (CLT).
 #CLT is STD / sqrt(n)
@@ -105,68 +75,17 @@ CI_right = theta_right + 2*clt
 CI_left
 CI_right
 
-## Old:
-# # We take samples of size = 4 with B = 1000.
-# A = 1000
-# A = 100 # Single trial
-# means = numeric(A)
-# for (a in 1:A)
-# {
-#   B = 1000
-#   sample_size = 3
-#   
-#   values = numeric(B)
-#   for (i in 1:B)
-#   {
-#     values[i] = mean(sample(after, sample_size))
-#   }
-#   #hist(values)
-#   
-#   sample_mean = mean(values)
-#   means[a] = sample_mean
-# }
-# 
-# hist(means)
-# mean(means)
-# mean(after)
-# 
-# head(after)
-# min(after)
-# max(after)
-# 
-# 
-# #standard_devation = sd(values)
-# #left_bound = sample_mean - 2*standard_devation
-# #right_bound = sample_mean + 2*standard_devation
-# #sample_mean
-# #standard_devation
-# #left_bound
-# #right_bound
-# 
-# 
-# 
-# 
-# 
-# B = 1000
-# sample_size = 3
-# 
-# rb = numeric(B)
-# means = numeric(B)
-# for (i in 1:B)
-# {
-#   mn = mean(sample(after, sample_size))
-#   rb[i] = mn + (mn - 3)
-#   means[i] = mn
-# }
-# 
-# hist(rb)
-# hist(means)
-# 
-# mean(means)
-# mean(rb)
-# 
-# mean(means) + (mean(means) - 3)
-# 
 #~~~~D~~~~#
 t_statistic = max(after)
 t_statistic
+
+#~~~~E~~~~#
+# For this question, we should look at the median of two groups. We can use Wilcoxon or Mann-Whitney for this.
+median(after) < 6
+binom.test(median(after) < 6, length(after))
+
+# Sign test?
+binom.test(sum(after < 4.5), length(after), p=0.25)
+
+
+
