@@ -79,13 +79,41 @@ CI_right
 t_statistic = max(after)
 t_statistic
 
+runif(n = 18, min = 3, max = 8)
+
+for (i in 3:12)
+{
+  runif(n = 18, min = 3, max = i)
+}
+
+# 
+# #ks.test(before, after)
+# B = 1000
+# tstar = numeric(B)
+# n=length(after)
+# for (i in 1:B)
+# {
+#   #xstar = rexp(n, 1)
+#   # Van de 1000 samples zijn er 40% die niet onder de max zitten?
+#   xstar = punif(tstar, min=3, max = 12)
+#   hist(xstar)
+#   tstar[i] = max(xstar)
+# }
+# hist(tstar)
+# hist(xstar)
+# 
+# 
+# pl=sum(tstar<t_statistic)/B
+# pr=sum(tstar>t_statistic)/B
+# p=2*min(pl,pr)
+# pl
+# pr
+# p
+
 #~~~~E~~~~#
-# For this question, we should look at the median of two groups. We can use Wilcoxon or Mann-Whitney for this.
+# For this question, we should look at the median of two groups.
 median(after) < 6
 binom.test(median(after) < 6, length(after))
 
 # Sign test?
 binom.test(sum(after < 4.5), length(after), p=0.25)
-
-
-
