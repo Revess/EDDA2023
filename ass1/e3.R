@@ -94,3 +94,18 @@ kruskal.test(df[df$diet == 3,]$weightdiff ~ df[df$diet==3,]$height)
 kruskal.test(df[df$diet == 1,]$preweight ~ df[df$diet==1,]$weight6weeks)
 kruskal.test(df[df$diet == 2,]$preweight ~ df[df$diet==2,]$weight6weeks)
 kruskal.test(df[df$diet == 3,]$preweight ~ df[df$diet==3,]$weight6weeks)
+
+diet1 = df[df$diet == 1,]
+diet2 = df[df$diet == 2,]
+diet3 = df[df$diet == 3,]
+mean(diet1$weightdiff, na.rm=TRUE)
+mean(diet2$weightdiff, na.rm=TRUE)
+mean(diet3$weightdiff, na.rm=TRUE)
+
+summary(lm(weightdiff ~ diet, data=diet1))
+summary(lm(weightdiff ~ diet, data=diet2))
+summary(lm(weightdiff ~ diet, data=diet3))
+
+
+
+summary(mean_sales = mean(df$weightdiff, na.rm=TRUE))
