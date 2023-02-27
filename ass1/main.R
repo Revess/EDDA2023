@@ -33,7 +33,7 @@ anova(dataov)
 
 # E
 library(lme4)
-dataov <- lm(yield ~ block*N, data = dat) 
+dataov <- lmer(yield ~ block*N, data = dat) 
 anova(dataov)
 # The p-value for the interaction is 0.47. We cannot reject the statement that there is no interaction between the factors. Therefore it does not make sense in include the block factor
 anova(lmer(yield ~ N*P*K + (1|block), data = dat))
