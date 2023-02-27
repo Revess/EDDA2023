@@ -23,8 +23,8 @@ hist(before)
 hist(after)
 
 # QQ-plots:
-qqnorm(before)
-qqnorm(after)
+qqnorm(before, main='QQ-plot before')
+qqnorm(after, main='QQ-plot after')
 
 mean(before)
 mean(after)
@@ -36,7 +36,8 @@ mean(after)
 #~~~~B~~~~#
 # Seems to be from of normal distribution
 hist(before - after)
-plot(before,after)
+#plot(before, after, main = 'Correlation')
+boxplot(before - after, main = 'Before - After')
 
 # Assuming the normality from A, we can use a Paired T-Test:
 t.test(before, after, paired = TRUE)
@@ -54,12 +55,16 @@ wilcox.test(before, after)
 # data:  before and after
 # W = 210.5, p-value = 0.1288
 # alternative hypothesis: true location shift is not equal to 0
+cor(before, after)
 
 hist(before)
 hist(after)
 
 ks.test(before, after, alternative = "less") # We expect that after8weeks is bigger than before.
 ks.test(before, after, alternative = "greater") # We expect that before is bigger than after8weeks.
+ks.test(before, after)
+
+cor.test(before, after, method = 'pearson')
 
 plot(before~after) # This Pearson's/Spearman's Rank correlation test shows that there might be a correlation?
 
@@ -92,14 +97,20 @@ for (i in 3:12)
   pvals[i] = sum(totals) / B
   print(pvals[i])
 }
-plot(pvals)
+plot(pvals, main='p-values of each possible theta')
 pvals
 
 
 #~~~~E~~~~#
 # For this question, we should look at the median of two groups.
+median(after)
 median(after) < 6
-binom.test(median(after) < 6, length(after))
+binom.test(sum(after < 6), length(after), alternative = 'l')
 
 # Sign test?
-binom.test(sum(after < 4.5), length(after), p=0.25)
+sum(after < 4.5)
+sum(after < 4.3)
+sum(after < 4.1)
+binom.test(sum(after < 4.5), length(after), p=0.25, alternative = 'l')
+binom.test(sum(after < 4.5), length(after), p=0.25, alternative = 'g')
+
