@@ -77,8 +77,23 @@ mean of x mean of y
  72.52564  68.68077'''
 
 #~~~B~~~#
+library(dplyr)
 aov(weightdiff ~ diet, data=df)
+anova(lm(weightdiff ~ diet, data=df))
+
+summary(lm(weightdiff ~ diet, data=df))
+
 kruskal.test(weightdiff ~ diet, data=df)
+
+
+res = lm( weightdiff ~ diet , data=df )
+anova ( res )
+summary( res )
+
+varietdf = data.frame(yield=as.vector(as.matrix(df$weightdiff)), variety=factor(df$diet))
+res = lm(yield ~ variety, data=varietdf)
+anova(res)
+summary(res)
 
 #~~~C~~~#
 aov(weightdiff ~ gender + age, data=df)
