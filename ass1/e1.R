@@ -5,6 +5,21 @@ df = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
 #The First sentence
 qqnorm(df$birthweight)
 
+mean(df$birthweight)
+var(df$birthweight)
+max(df$birthweight)
+min(df$birthweight)
+qnorm(0.96)
+
+total = 0
+for (i in 1:length(df$birthweight))
+{
+  total = total + (mean(df$birthweight) - df$birthweight[i])^2
+} 
+print(total)
+
+print(total/(length(df$birthweight)-1))
+
 #The CI
 t.test(df$birthweight,conf.level=0.96)
 
