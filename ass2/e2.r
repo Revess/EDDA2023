@@ -124,4 +124,26 @@ car::vif(lm(crime ~ bad+lawyers, data = cleaned)) # Removed pop, all values are 
 
 # This would then suggest that crime based on bad + lawyers would be a good setup.
 
-#~~~~A~~~~#
+#~~~~B~~~~#
+#b)  Fit a linear regression model to the data. Use the step-up method to find the best model. Comment.
+
+
+# Step-up is by starting with the base model and then slowly adding more variables
+summary(lm(crime ~ expend, data = cleaned)) # 0.1119
+summary(lm(crime ~ bad, data = cleaned)) # 0.01391
+summary(lm(crime ~ lawyers, data = cleaned)) # 0.1408
+summary(lm(crime ~ employ, data = cleaned)) # 0.09641
+summary(lm(crime ~ pop, data = cleaned)) # 0.0759
+# Thus, we add lawyers
+
+summary(lm(crime ~lawyers + expend, data = cleaned)) # 0.154
+summary(lm(crime ~lawyers + bad, data = cleaned)) # 0.1528
+summary(lm(crime ~lawyers + employ, data = cleaned)) # 0.1807
+summary(lm(crime ~lawyers + pop, data = cleaned)) # 0.1848 # NOTE: p=0.1139, thus we stop.
+# Resulting model = crime ~ lawyers + pop, but because the p-values is small, the resulting formula is:
+# 4.392e+03 + 3.177e-02 * lawyers + error, with R2 = 0.1408
+
+#~~~~C~~~~# (WORK IN PROGRESS!)
+#c)  Determine a 95% prediction interval for the expend using the model you preferred in b) for a (hypothetical) state with bad=50, crime=5000, lawyers=5000, employ=5000 and pop=5000. Can you improve this interval?
+fitted(lm(crime ~ lawyers, data=cleaned))
+
