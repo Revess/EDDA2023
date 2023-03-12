@@ -48,7 +48,7 @@ hist(expensescrime$crime)
 # hist(expensescrime$employ)
 # hist(expensescrime$pop)
 
-
+###################################################### Good till here.
 # Influence points
 lm_ex = lm(cleaned$expend ~ cleaned$crime)
 lm_ba = lm(cleaned$bad ~ cleaned$crime)
@@ -144,6 +144,13 @@ summary(lm(crime ~lawyers + pop, data = cleaned)) # 0.1848 # NOTE: p=0.1139, thu
 # 4.392e+03 + 3.177e-02 * lawyers + error, with R2 = 0.1408
 
 #~~~~C~~~~# (WORK IN PROGRESS!)
-#c)  Determine a 95% prediction interval for the expend using the model you preferred in b) for a (hypothetical) state with bad=50, crime=5000, lawyers=5000, employ=5000 and pop=5000. Can you improve this interval?
-fitted(lm(crime ~ lawyers, data=cleaned))
+#c)  Determine a 95% prediction interval for the expend using the model you preferred in b) for a (hypothetical) state with
+# bad=50, crime=5000, lawyers=5000, employ=5000 and pop=5000. Can you improve this interval?
+model = lm(crime ~ lawyers, data=cleaned) 
+fitted(model)
+newxdata = data.frame(bad=50,crime=5000, lawyers=5000, employ=5000, pop=5000)
+#predict(model, data.frame(lawyers=1))
+predict(model, newxdata, interval = 'prediction', level = 0.95)
+
+
 
