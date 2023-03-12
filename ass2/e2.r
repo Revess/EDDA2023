@@ -25,9 +25,9 @@ pairs(expensescrime[,c(2,4,6,7)]) # Subset
 
 boxplot(expensescrime[,-1]) # This plots all besides the first column, as that is text
 
-qqnorm(expensescrime$crime, main="Crime") # This seems to be the only normal one                                   (;))
-qqline(expensescrime$crime, main="Crime") # This seems to be the only normal one                                   (;))
-hist(expensescrime$crime)
+qqnorm(expensescrime$expend, main="Expend") # This seems to be the only normal one                                   (;))
+qqline(expensescrime$expend, main="Expend") # This seems to be the only normal one                                   (;))
+hist(expensescrime$expend)
 
 # Extra plots that won't be used: (One of each can be used to showcase)
 # qqnorm(expensescrime$expend)
@@ -49,59 +49,33 @@ hist(expensescrime$crime)
 # hist(expensescrime$pop)
 
 ###################################################### Good till here.
+lm_total = lm(expend ~ bad+crime+lawyers+employ+pop, data=cleaned)
+qqnorm(residuals(lm_total))
+
+
 # Influence points
-lm_ex = lm(cleaned$expend ~ cleaned$crime)
-lm_ba = lm(cleaned$bad ~ cleaned$crime)
-lm_la = lm(cleaned$lawyers ~ cleaned$crime)
-lm_em = lm(cleaned$employ ~ cleaned$crime)
-lm_po = lm(cleaned$pop ~ cleaned$crime)
-qqnorm(residuals(lm_ex))
-qqnorm(residuals(lm_ba))
-qqnorm(residuals(lm_la))
-qqnorm(residuals(lm_em))
-qqnorm(residuals(lm_po))
+lm_ba = lm(cleaned$expend ~ cleaned$bad)
+lm_cr = lm(cleaned$expend ~ cleaned$crime)
+lm_la = lm(cleaned$expend ~ cleaned$lawyers)
+lm_em = lm(cleaned$expend ~ cleaned$employ)
+lm_po = lm(cleaned$expend ~ cleaned$pop)
+## Could have the norms of each variable added.
 
 # Displays the outlier - Always results in 5 being the worst (expect for lm_ba)
-order(abs(residuals(lm_ex)))
-order(abs(residuals(lm_ba)))
-order(abs(residuals(lm_la)))
-order(abs(residuals(lm_em)))
-order(abs(residuals(lm_po)))
+qqplot(1:length(cleaned$expend), residuals(lm_total), main ="Residuals on outliers")
+order(abs(residuals((lm_total))))
+# This shows that there are 2 main outliers, the ones at -600 and the +600, which can also be shown by the following hist:
+hist(residuals(lm_total))
 
-summary(lm_ex)
-summary(lm_ba)
-summary(lm_la)
-summary(lm_em)
-summary(lm_po)
+# Removing these yields:
+remove_bad_ones = rep(0, length(cleaned$expend))
+absolute = order(abs(residuals(lm_total)))
+remove_bad_ones[absolute[length(absolute)]] = 1
+remove_bad_ones
 
-plot(1:length(cleaned$crime), cooks.distance(lm_ex), type="b", main="Cook's distance of expend ~ crime")
+fixed = lm(expend ~ bad+crime+lawyers+employ+pop + remove_bad_ones, data=cleaned)
+summary(fixed) # remove_bad_ones has a p-value of 3.63e-10, meaning that 5 is a significant outlier!
 
-# Post-processing of information
-five_is_bad = rep(0, length(cleaned$crime))
-five_is_bad[5] = 1
-five_is_bad
-
-test = lm(cleaned$expend ~ cleaned$crime + five_is_bad)
-summary(test) # Resulting P-value of cleaned$crime = 0.0362, thus the coefficient of the explanatory variable is significantly different from 0, the outlier thus is significant
-
-
-# Tests: - Won't be used.
-# head(cleaned)
-# model = lm(cleaned$lawyers~cleaned$crime)
-# bm = order(abs(residuals(model)))
-# bad = rep(0, length(cleaned$crime))
-# bad[bm[length(bm)]] = 1
-# added = lm(cleaned$lawyers~cleaned$crime+bad)
-# added
-# summary(added)
-# 
-# model = lm(cleaned$lawyers ~ cleaned$crime)
-# qqnorm(residuals(model))
-
-
-# This was a test to see what would happend when all other variables would be used.
-#lmodel = lm(cleaned$crime ~ cleaned$expend + cleaned$bad + cleaned$lawyers + cleaned$employ + cleaned$pop)
-#qqnorm(residuals(lmodel))
 
 # Collinearity
 round(cor(cleaned), 2)
@@ -117,12 +91,20 @@ pairs(cleaned)
 
 
 head(cleaned)
-car::vif(lm(crime ~ expend+bad+lawyers+employ+pop, data = cleaned)) # Using all, big values.
-car::vif(lm(crime ~ expend+bad+lawyers+pop, data = cleaned)) # Removed employ, lower values but still large
-car::vif(lm(crime ~ bad+lawyers+pop, data = cleaned)) # Removed bad, lower values but pop is still 16
-car::vif(lm(crime ~ bad+lawyers, data = cleaned)) # Removed pop, all values are < 5!
+car::vif(lm(expend ~ crime+bad+lawyers+employ+pop, data = cleaned)) # Using all, big values.
+# Results in:
+#crime       bad   lawyers    employ       pop 
+#1.487978  8.364321 16.967470 33.591361 32.937517 
 
-# This would then suggest that crime based on bad + lawyers would be a good setup.
+car::vif(lm(expend ~ crime+bad+lawyers+pop, data = cleaned)) # Removed employ
+# Results in:
+#crime       bad   lawyers       pop 
+#1.487593  8.243504 10.084215 20.680738 
+
+car::vif(lm(expend ~ crime+bad+lawyers, data = cleaned)) # Removed pop
+# Results in:
+#   crime      bad  lawyers 
+#1.180356 3.293266 3.299667
 
 #~~~~B~~~~#
 #b)  Fit a linear regression model to the data. Use the step-up method to find the best model. Comment.
