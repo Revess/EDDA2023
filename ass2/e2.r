@@ -1,5 +1,8 @@
 ########## START WITH RUNNING THE FOLLOWING COMMAND: ##########
-install.packages('car')
+#install.packages('car')
+#install.packages('glmnet')
+library('car')
+library('glmnet')
 
 
 #df = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt", sep=" ")
@@ -140,4 +143,38 @@ predict(model, newxdata, interval = 'prediction', level = 0.95)
 
 # Can you improve this interval? - We can improve this interval by using the 'confidence' interval.
 predict(model, newxdata, interval = 'confidence', level = 0.95)
+
+#~~~~D~~~~#
+# Apply the LASSO method to choose the relevant variables (with default parameters as in the lecture and lambda=lambda.1se).
+# (You will need to install the R-package glmnet, which is not included in the standard distribution of R.)
+# Compare the resulting model with the model obtained in b).
+# (Beware that in general a new run delivers a new model because of a new train set.)
+
+# Note: copied from the lecture-notes:
+#remove the response variable
+x = as.matrix(cleaned[,-1])
+x
+#only the response variable
+y = as.double(as.matrix(cleaned[,1]))
+y
+
+train = sample(1:nrow(x), 0.67*nrow(x)) # train by using 2/3 of the data
+x.train = x[train,]; y.train = y[train] # data to train
+x.test = x[-train,]; y.test = y[-train] # data to test the prediction quality
+lasso.mod = glmnet(x.train, y.train, alpha=1)
+cv.lasso = cv.glmnet(x.train, y.train, alpha=1, type.measure='mse')
+
+# Plots the coefficients paths
+plot(lasso.mod, label = T, xvar = "lambda") #have a look at the lasso path
+plot(cv.lasso) # the best lambda by cross-validation
+plot(cv.lasso$glmnet.fit, xvar = "lambda", label = T)
+
+
+## Try these please:
+lambda.min = lasso.cv$lambda.min;
+lambda.1se = lasso.cv$lambda.1se
+coef(lasso.model, s = lasso.cv$lambda.min) #beta’s for the best lambda
+y.pred = predict(lasso.model, s=lambda.min, newx = x.test) #predict for test
+mse.lasso = mean((y.test - y.pred)^2) #mse for the predicted test rows
+
 
