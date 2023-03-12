@@ -108,31 +108,36 @@ car::vif(lm(expend ~ crime+bad+lawyers, data = cleaned)) # Removed pop
 
 #~~~~B~~~~#
 #b)  Fit a linear regression model to the data. Use the step-up method to find the best model. Comment.
+                                        # R - R^2
+summary(lm(expend ~ bad, data=cleaned)) # 0.6964 - 0.6902
+summary(lm(expend ~ crime, data=cleaned)) # 0.1119 - 0.09373
+summary(lm(expend ~ lawyers, data = cleaned)) # 0.9373 - 0.936 
+summary(lm(expend ~ employ, data = cleaned)) # 0.954 - 0.953 
+summary(lm(expend ~ pop, data = cleaned)) #  0.9073 - 0.9054 
+# Thus, we add employ
 
+summary(lm(expend ~ employ + bad, data=cleaned)) #Multiple R-squared:  0.9551,	Adjusted R-squared:  0.9532 
+summary(lm(expend ~ employ + crime, data=cleaned)) # Multiple R-squared:  0.9551,	Adjusted R-squared:  0.9532 
+summary(lm(expend ~ employ + lawyers, data=cleaned)) # Multiple R-squared:  0.9632,	Adjusted R-squared:  0.9616 
+summary(lm(expend ~ employ + pop, data=cleaned)) # Multiple R-squared:  0.9543,	Adjusted R-squared:  0.9524 
+# Thus we add lawyers, since it's R-value is low and the P-value is 0.00113!
 
-# Step-up is by starting with the base model and then slowly adding more variables
-summary(lm(crime ~ expend, data = cleaned)) # 0.1119
-summary(lm(crime ~ bad, data = cleaned)) # 0.01391
-summary(lm(crime ~ lawyers, data = cleaned)) # 0.1408
-summary(lm(crime ~ employ, data = cleaned)) # 0.09641
-summary(lm(crime ~ pop, data = cleaned)) # 0.0759
-# Thus, we add lawyers
+summary(lm(expend ~ employ + lawyers + bad, data=cleaned)) # Multiple R-squared:  0.9639,	Adjusted R-squared:  0.9616 
+summary(lm(expend ~ employ + lawyers + crime, data=cleaned))# Multiple R-squared:  0.9632,	Adjusted R-squared:  0.9608 
+summary(lm(expend ~ employ + lawyers + pop, data=cleaned)) # Multiple R-squared:  0.9637,	Adjusted R-squared:  0.9614 
+# At this point, any of the added variables will be insignificant, as the addition of these will make their p-values > 0.05.
+# This means that the final model is (expend ~ employ + lawyers)
 
-summary(lm(crime ~lawyers + expend, data = cleaned)) # 0.154
-summary(lm(crime ~lawyers + bad, data = cleaned)) # 0.1528
-summary(lm(crime ~lawyers + employ, data = cleaned)) # 0.1807
-summary(lm(crime ~lawyers + pop, data = cleaned)) # 0.1848 # NOTE: p=0.1139, thus we stop.
-# Resulting model = crime ~ lawyers + pop, but because the p-values is small, the resulting formula is:
-# 4.392e+03 + 3.177e-02 * lawyers + error, with R2 = 0.1408
-
-#~~~~C~~~~# (WORK IN PROGRESS!)
+#~~~~C~~~~#
 #c)  Determine a 95% prediction interval for the expend using the model you preferred in b) for a (hypothetical) state with
 # bad=50, crime=5000, lawyers=5000, employ=5000 and pop=5000. Can you improve this interval?
-model = lm(crime ~ lawyers, data=cleaned) 
+model = lm(expend ~ employ + lawyers, data=cleaned) 
 fitted(model)
 newxdata = data.frame(bad=50,crime=5000, lawyers=5000, employ=5000, pop=5000)
-#predict(model, data.frame(lawyers=1))
 predict(model, newxdata, interval = 'prediction', level = 0.95)
+#      fit       lwr      upr
+# 172.2098 -302.9307 647.3504
 
-
+# Can you improve this interval? - We can improve this interval by using the 'confidence' interval.
+predict(model, newxdata, interval = 'confidence', level = 0.95)
 
