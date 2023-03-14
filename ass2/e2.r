@@ -153,10 +153,9 @@ predict(model, newxdata, interval = 'confidence', level = 0.95)
 # Note: copied from the lecture-notes:
 #remove the response variable
 x = as.matrix(cleaned[,-1])
-x
+
 #only the response variable
 y = as.double(as.matrix(cleaned[,1]))
-y
 
 train = sample(1:nrow(x), 0.67*nrow(x)) # train by using 2/3 of the data
 x.train = x[train,]; y.train = y[train] # data to train
@@ -169,12 +168,15 @@ plot(lasso.mod, label = T, xvar = "lambda") #have a look at the lasso path
 plot(cv.lasso) # the best lambda by cross-validation
 plot(cv.lasso$glmnet.fit, xvar = "lambda", label = T)
 
+# These are the min and the 1se values (see lecture notes)
+lambda.min = cv.lasso$lambda.min;
+lambda.1se = cv.lasso$lambda.1se
+lambda.min
+lambda.1se
 
-## Try these please:
-lambda.min = lasso.cv$lambda.min;
-lambda.1se = lasso.cv$lambda.1se
-coef(lasso.model, s = lasso.cv$lambda.min) #beta’s for the best lambda
-y.pred = predict(lasso.model, s=lambda.min, newx = x.test) #predict for test
+# I don't know if these matter?
+coef(lasso.mod, s = cv.lasso$lambda.min) #beta’s for the best lambda
+y.pred = predict(lasso.mod, s=lambda.min, newx = x.test) #predict for test
 mse.lasso = mean((y.test - y.pred)^2) #mse for the predicted test rows
-
+mse.lasso
 
