@@ -2,7 +2,7 @@
 #install.packages('car')
 #install.packages('glmnet')
 library('car')
-library('glmnet')
+#library('glmnet')
 
 
 #df = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt", sep=" ")
@@ -149,34 +149,58 @@ predict(model, newxdata, interval = 'confidence', level = 0.95)
 # (You will need to install the R-package glmnet, which is not included in the standard distribution of R.)
 # Compare the resulting model with the model obtained in b).
 # (Beware that in general a new run delivers a new model because of a new train set.)
+library(glmnet) 
 
-# Note: copied from the lecture-notes:
-#remove the response variable
-x = as.matrix(cleaned[,-1])
+# Share X and Y:
+x=as.matrix(cleaned[,-1])
+y=cleaned[,1]
 
-#only the response variable
-y = as.double(as.matrix(cleaned[,1]))
+# Train and test set + predict
+train=sample(1:nrow(x),0.67*nrow(x)) 
+x.train=x[train,]; y.train=y[train]  
+x.test=x[-train,]; y.test = y[-train]
+lm.model=lm(expend ~ employ + lawyers,data=cleaned,subset=train)
+y.predict.lm=predict(lm.model,newdata=cleaned[-train,])
 
-train = sample(1:nrow(x), 0.67*nrow(x)) # train by using 2/3 of the data
-x.train = x[train,]; y.train = y[train] # data to train
-x.test = x[-train,]; y.test = y[-train] # data to test the prediction quality
-lasso.mod = glmnet(x.train, y.train, alpha=1)
-cv.lasso = cv.glmnet(x.train, y.train, alpha=1, type.measure='mse')
+# Mean-squared error
+mse.lm=mean((y.test-y.predict.lm)^2); mse.lm
 
-# Plots the coefficients paths
-plot(lasso.mod, label = T, xvar = "lambda") #have a look at the lasso path
-plot(cv.lasso) # the best lambda by cross-validation
-plot(cv.lasso$glmnet.fit, xvar = "lambda", label = T)
+# Lasso!
+lasso.model=glmnet(x.train,y.train,alpha=1)
+lasso.cv=cv.glmnet(x.train,y.train,alpha=1,type.measure="mse",nfolds=5)
 
-# These are the min and the 1se values (see lecture notes)
-lambda.min = cv.lasso$lambda.min;
-lambda.1se = cv.lasso$lambda.1se
-lambda.min
-lambda.1se
+# Plots
+plot(lasso.model,label=T,xvar="lambda")
+plot(lasso.cv) 
 
-# I don't know if these matter?
-coef(lasso.mod, s = cv.lasso$lambda.min) #beta’s for the best lambda
-y.pred = predict(lasso.mod, s=lambda.min, newx = x.test) #predict for test
-mse.lasso = mean((y.test - y.pred)^2) #mse for the predicted test rows
-mse.lasso
+# Find out which variables are relevant:
+lambda.min=lasso.cv$lambda.min; lambda.1se=lasso.cv$lambda.1se; 
+lambda.min; lambda.1se # best lambda by cross validation
+coef(lasso.model,s=lasso.cv$lambda.min) # cyl,hp,wt,am and carb are relevant
+coef(lasso.model,s=lasso.cv$lambda.1se) # only cyl,hp and wt are releveant
 
+
+# The model found was:
+#> coef(lasso.model,s=lasso.cv$lambda.min) # cyl,hp,wt,am and carb are relevant
+#6 x 1 sparse Matrix of class "dgCMatrix"
+#s1
+#(Intercept) -52.66989609
+#bad           .         
+#crime         .         
+#lawyers       0.06307596
+#employ        0.00233929
+#pop           0.01403667
+
+#> coef(lasso.model,s=lasso.cv$lambda.1se) # only cyl,hp and wt are releveant
+#6 x 1 sparse Matrix of class "dgCMatrix"
+#s1
+#(Intercept) 1.227297e+02
+#bad         .           
+#crime       .           
+#lawyers     5.897375e-02
+#employ      3.396696e-05
+#pop         .           
+
+# When comparing that to the variables found in B), 
+# mse: lawyers + employ + pop
+# 1se: we can see that employ + lawyers are the same variables found
