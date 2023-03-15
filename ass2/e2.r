@@ -9,6 +9,7 @@ library('car')
 expensescrime = read.csv("C:/Users/markd/Code/EDDA2023/ass2/datasets/expensescrime.txt",  sep=" ")
 #expensescrime_rounded = round()
 cleaned = expensescrime[,-1]
+hist(cleaned$expend)
 
 # COLUMNS:
 #$state
@@ -24,12 +25,13 @@ cleaned = expensescrime[,-1]
 
 # Pairplots & boxplots will be used:
 pairs(expensescrime[,-1]) # Make sure that your plot-size on screen is big enough
-pairs(expensescrime[,c(2,4,6,7)]) # Subset
+#pairs(expensescrime[,c(2,4,6,7)]) # Subset
 
 boxplot(expensescrime[,-1]) # This plots all besides the first column, as that is text
 
 qqnorm(expensescrime$expend, main="Expend") # This seems to be the only normal one                                   (;))
 qqline(expensescrime$expend, main="Expend") # This seems to be the only normal one                                   (;))
+
 hist(expensescrime$expend)
 
 # Extra plots that won't be used: (One of each can be used to showcase)
@@ -54,6 +56,7 @@ hist(expensescrime$expend)
 ###################################################### Good till here.
 lm_total = lm(expend ~ bad+crime+lawyers+employ+pop, data=cleaned)
 qqnorm(residuals(lm_total))
+qqline(residuals(lm_total))
 
 
 # Influence points
@@ -66,6 +69,7 @@ lm_po = lm(cleaned$expend ~ cleaned$pop)
 
 # Displays the outlier - Always results in 5 being the worst (expect for lm_ba)
 qqplot(1:length(cleaned$expend), residuals(lm_total), main ="Residuals on outliers")
+
 order(abs(residuals((lm_total))))
 # This shows that there are 2 main outliers, the ones at -600 and the +600, which can also be shown by the following hist:
 hist(residuals(lm_total))
@@ -78,11 +82,11 @@ remove_bad_ones
 
 fixed = lm(expend ~ bad+crime+lawyers+employ+pop + remove_bad_ones, data=cleaned)
 summary(fixed) # remove_bad_ones has a p-value of 3.63e-10, meaning that 5 is a significant outlier!
-
+head(expensescrime)
 
 # Collinearity
 round(cor(cleaned), 2)
-pairs(cleaned)
+# pairs(cleaned) # This one is also in one of the first lines.
 # When looking at the numerical differences, we can see that: 
 # -expend + lawyers (0.97)
 # -expend + employ (0.98)
@@ -93,7 +97,6 @@ pairs(cleaned)
 # are all high valued collinears
 
 
-head(cleaned)
 car::vif(lm(expend ~ crime+bad+lawyers+employ+pop, data = cleaned)) # Using all, big values.
 # Results in:
 #crime       bad   lawyers    employ       pop 
@@ -136,6 +139,7 @@ summary(lm(expend ~ employ + lawyers + pop, data=cleaned)) # Multiple R-squared:
 # bad=50, crime=5000, lawyers=5000, employ=5000 and pop=5000. Can you improve this interval?
 model = lm(expend ~ employ + lawyers, data=cleaned) 
 fitted(model)
+
 newxdata = data.frame(bad=50,crime=5000, lawyers=5000, employ=5000, pop=5000)
 predict(model, newxdata, interval = 'prediction', level = 0.95)
 #      fit       lwr      upr
