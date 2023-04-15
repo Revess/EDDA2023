@@ -2,6 +2,13 @@
 df = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt")
 df = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
 
+b = df$birthweight
+
+prop.test(c(34,28), c(95, 93))
+
+binom.test(9,13,p=0.5)
+
+
 #The First sentence
 qqnorm(df$birthweight)
 
@@ -10,6 +17,13 @@ var(df$birthweight)
 max(df$birthweight)
 min(df$birthweight)
 qnorm(0.96)
+sqrt(var(df$birthweight))
+sd(df$birthweight)
+mean(df$birthweight)
+mean(df$birthweight) - qnorm(0.96) * (sd(df$birthweight) / sqrt(188))
+length(df$birthweight)
+standard_error = sd(df$birthweight) / sqrt(187)
+mean(df$birthweight) - qnorm(0.98) * standard_error
 
 total = 0
 for (i in 1:length(df$birthweight))

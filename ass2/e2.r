@@ -7,6 +7,14 @@ library('car')
 
 #df = read.csv("~/projects/EDDA2023/ass1/datasets/birthweight.txt", sep=" ")
 expensescrime = read.csv("C:/Users/markd/Code/EDDA2023/ass2/datasets/expensescrime.txt",  sep=" ")
+c = expensescrime$crime
+
+
+mu = 0.2
+x=rnorm(50, mu, 1)
+
+t.test(x, mu=0)
+
 #expensescrime_rounded = round()
 cleaned = expensescrime[,-1]
 hist(cleaned$expend)
@@ -32,7 +40,7 @@ boxplot(expensescrime[,-1]) # This plots all besides the first column, as that i
 qqnorm(expensescrime$expend, main="Expend") # This seems to be the only normal one                                   (;))
 qqline(expensescrime$expend, main="Expend") # This seems to be the only normal one                                   (;))
 
-hist(expensescrime$expend)
+hist(expensescrime$expend, main="Histogram of expend", xlab = "Column values")
 
 # Extra plots that won't be used: (One of each can be used to showcase)
 # qqnorm(expensescrime$expend)
@@ -72,7 +80,7 @@ qqplot(1:length(cleaned$expend), residuals(lm_total), main ="Residuals on outlie
 
 order(abs(residuals((lm_total))))
 # This shows that there are 2 main outliers, the ones at -600 and the +600, which can also be shown by the following hist:
-hist(residuals(lm_total))
+hist(residuals(lm_total), main="Histogram of residual full model", xlab="Residuals")
 
 # Removing these yields:
 remove_bad_ones = rep(0, length(cleaned$expend))
