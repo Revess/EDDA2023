@@ -4,6 +4,12 @@ df = read.csv("C:/Users/markd/Code/EDDA2023/ass1/datasets/birthweight.txt")
 
 #The First sentence
 qqnorm(df$birthweight)
+df$birthweight
+
+hist(df$birthweight, main="Histogram of birthweight values")
+boxplot(df$birthweight, main="Boxplot of birthweight values")
+shapiro.test(df$birthweight)
+
 
 mean(df$birthweight)
 var(df$birthweight)
@@ -23,8 +29,12 @@ print(total/(length(df$birthweight)-1))
 #The CI
 t.test(df$birthweight,conf.level=0.96)
 
+n <- (qnorm(0.98)^2*sd(df$birthweight)^2)/(50^2)
+n
+
+
 #Bootstrapping
-B=206
+B=821
 CI=0.96
 a=1-CI
 Tstar=numeric(B)
@@ -34,8 +44,8 @@ for(i in 1:B) {
     Tstar[i]=mean(Xstar) 
 }
 
-L=quantile(Tstar,a)
-U=quantile(Tstar,1-(a))
+L=quantile(Tstar,a/2)
+U=quantile(Tstar,1-(a/2))
 sum(Tstar<L)
 c(2*mean(c1)-U,2*mean(c1)-L)
 
