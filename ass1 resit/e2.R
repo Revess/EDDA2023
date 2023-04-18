@@ -21,7 +21,7 @@ line <- function(before, after){
 pairs(data, panel=line)
 
 # Boxplot
-boxplot(data)
+boxplot(data, main="Boxplot of diet-effect")
 
 # Shapiro-Wilk
 shapiro.test(before)
@@ -109,7 +109,7 @@ for (i in seq(3,12, by=0.001)){
   pvals[[length(pvals)+1]] = min(pl,pr)
 }
 
-plot(seq(3, 12, by=0.001), pvals, type='o', main='p-values of each possible theta')
+plot(seq(3, 12, by=0.001), pvals, type='o', main='p-values of each possible theta', xlab='Thetas')
 
 left = min(seq(3, 12, by=0.001)[pvals>0.05])
 right = max(seq(3, 12, by=0.001)[pvals>0.05])

@@ -164,3 +164,12 @@ hist(femalemeans)
 mean(malemeans)
 mean(femalemeans)
 
+
+
+
+malesmaller = 34
+femalesmaller = 28
+maleall = 61 + 34
+femaleall = 65 + 28
+
+prop.test(c(malesmaller, femalesmaller), c(maleall, femaleall))
